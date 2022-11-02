@@ -121,6 +121,9 @@ dictionary MediaRecorderChunkStreamInit {
 [Exposed=(Window,DedicatedWorker)] interface MediaRecorder : EventTarget {
   // ...
 
+  [CallWith=ExecutionContext, RaisesException, Exposed=Window] constructor(
+      MediaStream stream, optional MediaRecorderOptions options = {});
+
   [CallWith=ExecutionContext, RaisesException] constructor(
       MediaRecorderChunkStreamInit init);
 
