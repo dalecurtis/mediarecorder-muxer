@@ -80,6 +80,15 @@ let videoEncoder = new VideoEncoder({/*...*/ output: onVideoChunk /*...*/ });
 // Stop and flush encoders.
 await audioEncoder.flush();
 await videoEncoder.flush();
+
+// Flush any remaining chunks.
+while (audioChunks.length > 0)
+  audioStream.stream.addChunk(audioChunks.shift());
+audioStream.stream.close();
+while (videoChunks.length > 0)
+  videoStream.stream.addChunk(videoChunks.shift());
+videoStream.stream.close();
+
 recorder.stop();
 
 // Alternatively: Subscribe to MediaRecorder.ondataavailable
@@ -102,20 +111,16 @@ Containers are complicated and supporting both muxing and demuxing with the full
 ## Proposed IDL
 
 ```Javascript
-dictionary EncodedAudioChunkStreamInit {
+typedef (AudioDecoderConfig or VideoDecoderConfig) MediaRecorderConfig;
+dictionary EncodedMediaChunkStreamInit {
   required ReadableStream stream;
-  required AudioDecoderConfig config;
-};
-
-dictionary EncodedVideoChunkStreamInit {
-  required ReadableStream stream;
-  required VideoDecoderConfig config;
+  required MediaRecorderConfig config;
 };
 
 dictionary MediaRecorderChunkStreamInit {
   required DOMString mimeType;
-  optional EncodedAudioChunkStreamInit audio;
-  optional EncodedVideoChunkStreamInit video;
+  optional EncodedMediaChunkStreamInit audio;
+  optional EncodedMediaChunkStreamInit video;
 }
 
 [Exposed=(Window,DedicatedWorker)] interface MediaRecorder : EventTarget {
