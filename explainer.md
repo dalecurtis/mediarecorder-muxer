@@ -23,7 +23,7 @@ We propose a small extension to MediaRecorder API to allow it to work with the o
 * Supporting muxing of arbitrary codecs. I.e., codecs must be ones already known by the browser in some form.
 
 
-## Proposed API
+## Example Usage
 
 ```Javascript
 let recorder = null;
@@ -62,7 +62,7 @@ function onAudioChunk(/*EncodedAudioChunk:*/chunk,
     audioStream.stream.addChunk(audioChunks.shift());
 }
 
-function onAudioChunk(/*EncodedVideoChunk:*/chunk,
+function onVideoChunk(/*EncodedVideoChunk:*/chunk,
                       /*EncodedVideoChunkMetadata:*/metadata) {
   if (!videoStream)
     videoStream = { stream: createStream(); config: metadata.decoderConfig };
