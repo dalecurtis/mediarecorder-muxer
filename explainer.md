@@ -35,7 +35,7 @@ let videoChunks = []
 function maybeCreateRecorder() {
   if (!audioStream.stream || !videoStream.stream || recorder)
     return;
-  recorder = recorder = new MediaRecorder({
+  recorder = new MediaRecorder({
     mimeType: 'video/webm; codecs="..."',
     audio: audioStream,
     video: videoStream
@@ -126,11 +126,15 @@ dictionary MediaRecorderChunkStreamInit {
 [Exposed=(Window,DedicatedWorker)] interface MediaRecorder : EventTarget {
   // ...
 
+  // Fixes to existing methods for Expose=Window restrictions for MediaStream.
   [CallWith=ExecutionContext, RaisesException, Exposed=Window] constructor(
       MediaStream stream, optional MediaRecorderOptions options = {});
+  [Exposed=Window] readonly attribute MediaStream stream;
 
+  // New constructor for encoded chunk streams.
   [CallWith=ExecutionContext, RaisesException] constructor(
       MediaRecorderChunkStreamInit init);
+
 
   // ...
 };
